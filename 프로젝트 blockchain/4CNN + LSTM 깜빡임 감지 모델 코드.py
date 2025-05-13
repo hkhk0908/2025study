@@ -1,20 +1,20 @@
-import numpy as np
-import cv2
 import os
+import cv2
+import numpy as np
 import pandas as pd
 from tensorflow.keras.utils import to_categorical
 
 img_folder = 'eye_crops'
-label_csv = 'labels.csv'
-SEQ_LEN = 10
+label_csv  = 'labels.csv'
+SEQ_LEN     = 50
 
-df = pd.read_csv(label_csv)
-img_paths = [os.path.join(img_folder, name) for name in df['image']]
-labels = df['label'].map({'open': 0, 'closed': 1, 'blink': 2}).values
+df        = pd.read_csv(label_csv)
+img_paths = [os.path.join(img_folder, n) for n in df['image']]
+labels    = df['label'].map({'open':0, 'closed':1, 'blink':2}).values
 
 X, y = [], []
 for i in range(len(img_paths) - SEQ_LEN):
-    seq_imgs = img_paths[i:i+SEQ_LEN]
+    seq_imgs  = img_paths[i:i+SEQ_LEN]
     seq_label = labels[i+SEQ_LEN-1]
 
     imgs = [cv2.imread(p) for p in seq_imgs]
@@ -29,5 +29,15 @@ y = to_categorical(y, num_classes=3)
 
 np.save('X.npy', X)
 np.save('y.npy', y)
-print("시퀀스 저장 완료")
+
+# (시퀀스 X, y 를 np.save 로 저장한 바로 다음 줄에)
+print(f"X.shape: {X.shape}, y.shape: {y.shape}")
+
+
+# 출력
+print(f"4) X.shape: {X.shape}, y.shape: {y.shape}")
+(unique, counts) = np.unique(np.argmax(y, axis=1), return_counts=True)
+print("   클래스 분포:", dict(zip(unique, counts)))
+print("4) 시퀀스 저장 완료")
+
 
