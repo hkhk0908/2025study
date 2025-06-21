@@ -20,4 +20,3 @@ with open(csv_path, 'w', newline='') as f:
 # 분포 확인
 df = pd.read_csv(csv_path)
 print("3) 라벨 분포:\n", df['label'].value_counts())
-

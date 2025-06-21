@@ -1,0 +1,81 @@
+{
+  "format": "pipeline-model",
+  "generatedBy": "Custom Python Pipeline",
+  "convertedBy": "ChatGPT",
+  "pipeline": [
+    {
+      "step": 1,
+      "name": "extract_frames",
+      "script": "extract_frames.py",
+      "description": "videos/open_blink & videos/closed 폴더의 .mp4에서 프레임을 추출하여 frames/에 저장"
+    },
+    {
+      "step": 2,
+      "name": "crop_eyes",
+      "script": "crop_eyes.py",
+      "description": "frames/의 각 이미지에서 MediaPipe FaceMesh로 눈 영역을 잘라내 eye_crops/에 저장"
+    },
+    {
+      "step": 3,
+      "name": "create_labels",
+      "script": "create_labels.py",
+      "description": "eye_crops/의 파일명에 따라 라벨(open/closed/blink)을 매겨 labels.csv 생성"
+    },
+    {
+      "step": 4,
+      "name": "make_sequences",
+      "script": "make_sequences.py",
+      "description": "labels.csv 기반으로 길이 50 시퀀스(X.npy)와 one-hot 라벨(y.npy) 생성"
+    },
+    {
+      "step": 5,
+      "name": "train_model",
+      "script": "train_model.py",
+      "description": "CNN+LSTM 모델 학습, blink_model.keras 저장, accuracy.png·loss.png·train_log.txt 출력"
+    },
+    {
+      "step": 6,
+      "name": "package_web",
+      "script": "package_web.py",
+      "description": "필요 파일(labels.csv, X.npy, y.npy, blink_model.keras, logs, PNG들)과 eye_crops/를 web_package/에 복사"
+    }
+  ],
+  "modelConversion": {
+    "inputKeras": "blink_model.keras",
+    "outputTFJS": "web_package/js_model",
+    "command": "tensorflowjs_converter --input_format=keras blink_model.keras web_package/js_model"
+  },
+  "weightsManifest": [
+    {
+      "paths": ["group1-shard1of1.bin"],
+      "weights": [
+        { "name": "conv2d/kernel",    "shape": [3, 3, 3, 32],    "dtype": "float32" },
+        { "name": "conv2d/bias",      "shape": [32],              "dtype": "float32" },
+        { "name": "conv2d_1/kernel",  "shape": [3, 3, 32, 32],    "dtype": "float32" },
+        { "name": "conv2d_1/bias",    "shape": [32],              "dtype": "float32" },
+        { "name": "conv2d_2/kernel",  "shape": [3, 3, 3, 32],     "dtype": "float32" },
+        { "name": "conv2d_2/bias",    "shape": [32],              "dtype": "float32" },
+        { "name": "conv2d_3/kernel",  "shape": [3, 3, 32, 32],    "dtype": "float32" },
+        { "name": "conv2d_3/bias",    "shape": [32],              "dtype": "float32" },
+        { "name": "conv2d_4/kernel",  "shape": [1, 1, 32, 1],     "dtype": "float32" },
+        { "name": "conv2d_4/bias",    "shape": [1],               "dtype": "float32" },
+        { "name": "conv2d_5/kernel",  "shape": [3, 3, 32, 64],    "dtype": "float32" },
+        { "name": "conv2d_5/bias",    "shape": [64],              "dtype": "float32" },
+        { "name": "conv2d_6/kernel",  "shape": [3, 3, 64, 64],    "dtype": "float32" },
+        { "name": "conv2d_6/bias",    "shape": [64],              "dtype": "float32" },
+        { "name": "conv2d_7/kernel",  "shape": [3, 3, 32, 64],    "dtype": "float32" },
+        { "name": "conv2d_7/bias",    "shape": [64],              "dtype": "float32" },
+        { "name": "conv2d_8/kernel",  "shape": [3, 3, 64, 64],    "dtype": "float32" },
+        { "name": "conv2d_8/bias",    "shape": [64],              "dtype": "float32" },
+        { "name": "conv2d_9/kernel",  "shape": [1, 1, 64, 1],     "dtype": "float32" },
+        { "name": "conv2d_9/bias",    "shape": [1],               "dtype": "float32" },
+        { "name": "dense/kernel",     "shape": [3136, 128],       "dtype": "float32" },
+        { "name": "dense/bias",       "shape": [128],             "dtype": "float32" },
+        { "name": "dense_1/kernel",   "shape": [128, 1],          "dtype": "float32" },
+        { "name": "dense_1/bias",     "shape": [1],               "dtype": "float32" }
+      ]
+    }
+  ]
+}
+
+
