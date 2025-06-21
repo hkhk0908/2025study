@@ -36,4 +36,3 @@ for fn in sorted(os.listdir(frame_folder)):
     cv2.imwrite(os.path.join(save_folder, fn), crop)
 
 print(f"2) 눈 crop 완료 — 성공: {success}, 실패: {fail}")
-

@@ -25,4 +25,3 @@ for lbl in label_folders:
         cap.release()
 
 print("1) 프레임 추출 완료")
-

@@ -26,4 +26,3 @@ for fn in files_to_copy:
 shutil.copytree(eye_crop_src, os.path.join(target_folder, 'eye_crops'))
 
 print(f"6) 웹 패키지 준비 완료 → ./{target_folder}/")
-

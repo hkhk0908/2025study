@@ -30,14 +30,12 @@ y = to_categorical(y, num_classes=3)
 np.save('X.npy', X)
 np.save('y.npy', y)
 
-# (시퀀스 X, y 를 np.save 로 저장한 바로 다음 줄에)
+# 추가: 배열 모양을 터미널에 출력
 print(f"X.shape: {X.shape}, y.shape: {y.shape}")
-
 
 # 출력
 print(f"4) X.shape: {X.shape}, y.shape: {y.shape}")
+
 (unique, counts) = np.unique(np.argmax(y, axis=1), return_counts=True)
 print("   클래스 분포:", dict(zip(unique, counts)))
 print("4) 시퀀스 저장 완료")
-
-
